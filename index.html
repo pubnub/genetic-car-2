@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>HTML5 Genetic Algorithm 2D Car Thingy - Chrome recommended</title>
+<head>
+    <title>Multiplayer Genetic Algorithm 2D Car Thingy - PubNub Real-time Network</title>
     <style>
       #mainbox {
         width: 800px;
@@ -33,11 +33,11 @@
         font-size: 9px;
       }
 
-      #s0 { top: 200px; }
-      #s25 { top: 150px; }
-      #s50 { top: 100px; }
-      #s75 { top: 50px; }
-      #s100 { top: 0px; }
+      #s0   { top: 200px; }
+      #s25  { top: 150px; }
+      #s50  { top: 100px; }
+      #s75  { top: 50px;  }
+      #s100 { top: 0px;   }
 
       #graphcanvas {
         border: 1px solid black;
@@ -127,8 +127,7 @@
         }
 
     </style>
-  </head>
-  <body>
+</head><body>
     <canvas id="mainbox" width="800" height="400"></canvas>
     <div id="graphholder">
       <canvas id="graphcanvas" width="400" height="200"></canvas>
@@ -230,9 +229,9 @@
       <div name="health" class="health"></div>
       <div name="healthtext" class="healthtext"></div>
     </div>
-  </body>
+    <script src="https://pubnub.a.ssl.fastly.net/pubnub-3.5.3.min.js"></script>
     <script src="seedrandom.js"></script>
     <script src="box2d.js"></script>
     <script src="ghost.js"></script>
     <script src="cawro.js"></script>
-</html>
+</body></html>
