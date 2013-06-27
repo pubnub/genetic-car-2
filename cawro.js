@@ -1,4 +1,4 @@
-
+(function(){
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // 
 // General Utility Functions
@@ -74,7 +74,7 @@ function date_out() {
             "<strong class=chat-time>{time}</strong> "+
             "<strong class=chat-name>( {name} )</strong> | &nbsp;"+
             "''{text}''<br>", message
-        ) + output.innerHTML;
+        ) + output.innerHTML.slice( 0, 4000 );
     }
 
     // On Connect we can Load History
@@ -101,6 +101,29 @@ function date_out() {
     });
     
 })();
+
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// 
+// Hashcash Management
+// 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+function car_encode(car_def) {
+    car_update_validator(car_def);
+    while (!car_validate(car_def)) {
+        car_update_validator(car_def);
+    }
+    return car_def;
+}
+function car_update_validator(car_def) {
+    car_def.validator = ''+(Math.random() * new Date());
+}
+function car_validate(car_def) {
+    return car_hash(car_def).slice( 0, 3 ) === "000";
+}
+function car_hash(car_def) {
+    return SHA1(JSON.stringify(car_def));
+}
 
 
 (function(){
@@ -153,12 +176,11 @@ function send( name, data ) {
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 var remotecarsnum = 0;
 PUBNUB.events.bind( "champion", function(data) {
-
+    if (!car_validate(data.car_def)) return;
     data.car_def.remoted = true;
     data.car_def = cw_cleanCar(data.car_def);
     cw_carScores.push(data);
     PUBNUB.$("remotecarsnum").innerHTML = ++remotecarsnum;
-
 } );
 
 PUBNUB.init({
@@ -653,7 +675,10 @@ function cw_nextGeneration() {
     cw_carScores[k].car_def.index = k;
 
     // Only transmit #1 Top
-    k||send( "champion", cw_carScores[k] );
+    if (!k) {
+        car_encode(cw_carScores[k].car_def);
+        send( "champion", cw_carScores[k] );
+    }
     newGeneration.push(cw_cleanCar(cw_carScores[k].car_def));
   }
   for (k = gen_champions; k < generationSize; k++) {
@@ -1354,4 +1379,5 @@ function cw_init() {
 
 cw_init();
 
+})();
 })();

@@ -68,7 +68,7 @@
       #graphcanvas {
         border: 1px solid black;
         border-radius: 5px;
-        margin: 10px 0;
+        margin: 10px 0 0 10px;
       }
 
       #topscoreholder {
@@ -93,6 +93,7 @@
         width: 800px;
         height: 200px;
         overflow: hidden;
+        margin: 10px;
       }
 
       .minimapmarker {
@@ -286,7 +287,7 @@
 <div class="palette-silver chat-margins"><div class=container><div class=panel>
 
     <div class="row"><div class="span7">
-        <h2>Multiplayer Genetic Car Chat v1.04</h2>
+        <h2>Multiplayer Genetic Car Chat v1.12</h2>
     </div></div>
     <div class="row"></div>
     <div class="row row-margin">
@@ -316,11 +317,13 @@
 
     <div id="graphholder">
       <canvas id="graphcanvas" width="400" height="200"></canvas>
+      <!--
       <div class="scale" id="s100">200</div>
       <div class="scale" id="s75">150</div>
       <div class="scale" id="s50">100</div>
       <div class="scale" id="s25">50</div>
       <div class="scale" id="s0">0</div>
+      -->
     </div>
     <div id="minimapholder">
       <div id="minimapfog"></div>
@@ -334,7 +337,7 @@
     <div id="data">
 
     <h1 class="center">Genetic Cars 2: Multiplayer</h1>
-    <div id="version">VERSION 2.51</div>
+    <div id="version">VERSION 2.52</div>
 
     <div id="twitterbtn">
     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://gencar.co" data-text="Multiplayer Genetic Algorithm 2D Car" data-via="PubNub" data-size="large" data-hashtags="javascript">Tweet</a>
@@ -384,7 +387,7 @@
 
       <div>
         Join World:
-        <input type="text" value="PubNub-World-28" id="newseed" />
+        <input type="text" value="PubNub-World-30" id="newseed" />
         <input type="button" value="Go!" id="gobtn" onclick="cw_confirmResetWorld()" />
       </div>
       <div>
@@ -507,6 +510,7 @@
     <script src="seedrandom.js"></script>
     <script src="box2d.js"></script>
     <script src="ghost.js"></script>
+    <script src="sha1.js"></script>
     <script src="cawro.js"></script>
     <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
