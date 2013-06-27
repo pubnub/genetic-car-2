@@ -224,7 +224,7 @@ var cw_graphTop        = [];
 var cw_graphElite      = [];
 var cw_graphAverage    = [];
 
-var gen_champions      = 3;
+var gen_champions      = 2;
 var gen_parentality    = 0.2;
 var gen_mutation       = 0.1;
 var gen_counter        = 0;
@@ -651,9 +651,8 @@ function cw_nextGeneration() {
     newborn = cw_makeChild(cw_carGeneration[parent1],cw_carGeneration[parent2]);
     newborn = cw_mutate(newborn);
     newborn.is_elite = false;
-    newborn.uuid = cw_carGeneration[parent1].uuid;
+    newborn.uuid = cw_carGeneration[parent1].uuid.slice(-3) + PUBNUB.uuid().slice(-3);
     newborn.index = k;
-    //document.getElementById("bar"+k).src = "reddot.png";
     newGeneration.push(newborn);
   }
   cw_carScores = [];
