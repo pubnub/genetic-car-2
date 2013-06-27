@@ -4,6 +4,10 @@
     <title>Multiplayer Genetic Algorithm 2D Car - PubNub Real-time Network</title>
     <link href='buttons.css' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700|Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=960">
+    <link href="flat/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="flat/css/flat-ui.css" rel="stylesheet">
+    <link href="flat/css/app.css" rel="stylesheet">
     <style>
       input, div, html, body, a, h1 {
         font-family: "Droid Sans";
@@ -186,13 +190,18 @@
         margin: 3px;
         border-radius: 5px;
     }
+    #newseed {
+        width: 120px;
+        font-size: 12px;
+    }
     #gobtn {
         cursor: pointer;
     }
     #mutationrate {
         margin: 20px;
         width: 140px;
-        font-size: 20px;
+        height: 40px;
+        font-size: 17px;
     }
     #explanation {
         width: 600px;
@@ -226,6 +235,11 @@
         background-color: rgba( 220,199,100, 0.8 );
         border: 4px solid red;
         border-radius: 9px;
+    }
+    .chat-margins {
+        margin: 20px;
+        border-radius: 10px;
+        padding: 10px;
     }
     </style>
 </head><body>
@@ -286,7 +300,7 @@
 
       <div>
         Join World:
-        <input type="text" value="PubNub-World-4" id="newseed" />
+        <input type="text" value="PubNub-World-5" id="newseed" />
         <input type="button" value="Go!" id="gobtn" onclick="cw_confirmResetWorld()" />
       </div>
       <div>
@@ -329,6 +343,40 @@
     </div>
     <div id="explanation">
       <div id=output></div>
+
+<!-- =========== -->
+<!-- PANEL: CHAT -->
+<!-- =========== -->
+<div class="palette-silver chat-margins"><div class=container><div class=panel>
+
+    <div class="row"><div class="span3">
+        <h2>Group Chat</h2>
+    </div></div>
+    <div class="row"></div>
+    <div class="row row-margin">
+        <div class="span4">
+            <input type="text"
+                   id="chat-input"
+                   value=""
+                   placeholder="Chat Here"
+                   class="span4">
+        </div>
+        <div class="span3">
+            <input type="text"
+                   id="chat-name"
+                   value="Random"
+                   class="span2">
+            &nbsp;<span class="fui-user"></span>
+        </div>
+        <div id="chat-output" class="span11">
+            <!-- CHAT OUTPUT HERE -->
+            <!-- CHAT OUTPUT HERE -->
+            <!-- CHAT OUTPUT HERE -->
+        </div>
+    </div>
+
+</div></div></div>
+
       <h3>Genetic Cars 2: About</h3>
       This game is connected to the world,
       all players are sharing their best cars each game round.

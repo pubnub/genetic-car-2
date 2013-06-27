@@ -1,3 +1,106 @@
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// 
+// General Utility Functions
+// 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+function clean(text)    { return (''+text).replace( /[<>]/g, '' ) }
+function first_div(elm) { return elm.getElementsByTagName('div')[0] }
+function zeropad(num)   { return (''+num).length > 1 ? ''+num : '0'+num }
+function date_out() {
+    var now = new Date()
+    ,   min = now.getMinutes()
+    ,   hrs = now.getHours();
+
+    return PUBNUB.supplant( '{hours}:{minutes}<sup>{pmam}</sup>', {
+        hours   : zeropad(hrs > 12 ? (hrs - 12) || 1 : hrs || 1),
+        minutes : zeropad(min),
+        pmam    : hrs > 11 ? 'pm' : 'am'
+    } );
+}
+
+
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// 
+// Chat
+// 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+(function(){
+
+    var pubnub  = PUBNUB.init({
+        subscribe_key : 'demo',
+        publish_key   : 'demo'
+    });
+
+    var input   = pubnub.$('chat-input')
+    ,   output  = pubnub.$('chat-output')
+    ,   cname   = pubnub.$('chat-name')
+    ,   channel = 'gencar-chat';
+
+    // RND Name
+    cname.value = PUBNUB.uuid().slice(-5);
+
+    // Send Chat Message
+    function send() {
+        if (!input.value) return;
+
+        return pubnub.publish({
+            channel : channel,
+            message : {
+                name : clean(cname.value),
+                text : clean(input.value),
+                time : date_out()
+            },
+            x : (input.value='')
+        });
+    }
+
+    // Append Chat Message
+    function chat(message) {
+        // Default Name
+        if (!('name' in message)) message.name = "Robert";
+        message.name = message.name.slice( 0, 10 );
+
+        // Clean Precaution
+        message.text = clean(message.text);
+
+        // Don't Show Blank Messages
+        if (!message.text.replace( /\s/g, '' )) return;
+
+        // Ouptut to Screen
+        output.innerHTML = pubnub.supplant(
+            "<strong class=chat-time>{time}</strong> "+
+            "<strong class=chat-name>( {name} )</strong> | &nbsp;"+
+            "''{text}''<br>", message
+        ) + output.innerHTML;
+    }
+
+    // On Connect we can Load History
+    function connect() {
+        pubnub.history({
+            channel  : channel,
+            limit    : 50,
+            callback : function(msgs) {
+                if (msgs.length > 1)
+                    pubnub.each( msgs[0], chat );
+            }
+        })
+    }
+
+    // Receive Chat Message
+    pubnub.subscribe({
+        channel  : channel,
+        connect  : connect,
+        callback : chat
+    });
+
+    pubnub.bind( 'keyup', input, function(e) {
+       (e.keyCode || e.charCode) === 13 && send();
+    });
+    
+})();
+
+
 (function(){
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1125,12 +1228,15 @@ function cw_resetPopulation() {
 }
 
 function cw_resetWorld() {
+  remotecarsnum = 0;
   floorseed = document.getElementById("newseed").value;
   connect_world(floorseed);
+
   cw_stopSimulation();
   for (b = world.m_bodyList; b; b = b.m_next) {
     world.DestroyBody(b);
   }
+
   Math.seedrandom(floorseed);
   cw_createFloor();
   cw_drawMiniMap();

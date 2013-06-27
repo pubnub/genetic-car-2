@@ -1,0 +1,173 @@
+/* ======================================================================= */
+/* HEADER
+/* ======================================================================= */
+header {
+    text-align: center;
+    background-color: #111;
+    color: #fff;
+}
+.header {
+    text-align: center;
+    font-size: 60px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 80px;
+}
+.header small {
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    font-size: 22px;
+    line-height: 32px;
+    font-weight: 100;
+    letter-spacing: -1px;
+    padding-top: 5px;
+}
+.header-row {
+    margin-bottom: 40px;
+}
+.header-button {
+    margin: 50px 0 10px 132px;
+    width: 200px;
+}
+.header-video {
+    background: white;
+    height: 260px;
+}
+
+#stock-tickers {
+    min-height: 540px;
+}
+
+
+/* ======================================================================= */
+/* EMBLEM
+/* ======================================================================= */
+.emblem {
+    line-height: 24px;
+    padding-right: 7px;
+}
+.emblem-home {
+    line-height: 43px;
+    padding-right: 10px;
+}
+.emblem-header {
+    line-height: 24px;
+    padding-right: 7px;
+}
+.emblem-footer {
+    line-height: 17px;
+    padding-right: 7px;
+}
+
+
+/* ======================================================================= */
+/* UTILITIES
+/* ======================================================================= */
+a.github-link {
+    color: #ecf0f1;
+}
+a.github-link:hover {
+    color: #1abc9c;
+}
+a.github-link:active {
+    color: #e74c3c;
+}
+.github {
+    display: block;
+    border: 0;
+    width: 250px;
+    height: 250px;
+    background-size: 250px;
+    background-image:
+    url(http://pubnub-demo.s3.amazonaws.com/real-time-stock/github-logo.png);
+}
+.github-screen {
+    display: block;
+    border: 0;
+    width: 590px;
+    height: 365px;
+    background-size: 590px;
+    background-image:
+    url(http://pubnub-demo.s3.amazonaws.com/real-time-stock/github-real-time-stock.png);
+}
+.chat-time {
+    width: 60px;
+    display: inline-block;
+}
+.chat-name {
+    width: 120px;
+    display: inline-block;
+}
+#chat-output {
+    color: #fff;
+    border-left: 1px solid #7f8c8d;
+    padding-left: 20px;
+    height: 150px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.output-history-example-margin {
+    margin: 10px;
+}
+.clickable {
+    cursor: pointer;
+}
+.code {
+    font-size: 11px;
+    line-height: 16px;
+}
+.general-description {
+    margin: 20px;
+    height: 60px;
+}
+.span-btn {
+    margin-bottom: 10px;
+}
+.row-margin {
+    margin-bottom: 40px;
+}
+.row-margin-small {
+    margin-bottom: 20px;
+}
+.span-sep {
+    border-right: 1px solid rgba(0,0,0,0.1);
+}
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.section-margins {
+    margin-bottom: 30px;
+}
+
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+.animate {
+    -webkit-transition: all 0.5s;
+    -moz-transition:    all 0.5s;
+    -ms-transition:     all 0.5s;
+    -o-transition:      all 0.5s;
+    transition:         all 0.5s;
+
+    -webkit-transition-timing-function: ease-in-out;
+    -moz-transition-timing-function:    ease-in-out;
+    -ms-transition-timing-function:     ease-in-out;
+    -o-transition-timing-function:      ease-in-out;
+    transition-timing-function:         ease-in-out;
+}
+
+/* ======================================================================= */
+/* PANEL: NEW | LOAD
+/* ======================================================================= */
+
