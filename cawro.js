@@ -165,6 +165,10 @@ PUBNUB.init({
         var admin = PUBNUB.$("adminmsg");
         admin.innerHTML = message;
         PUBNUB.css( admin, { display : 'block' } );
+
+        setTimeout( function() {
+            PUBNUB.css( admin, { display : 'none' } );
+        }, 5000 );
     }
 });
 
