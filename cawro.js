@@ -11,29 +11,29 @@ var multiplayer = PUBNUB.init({
 });
 
 multiplayer.player         = {};
-multiplayer.player.channel = 'PubNub8';
-multiplayer.player.uuid    = multiplayer.uuid().slice(-6);
-multiplayer.publishcar     = true;
+multiplayer.player.channel = 'PubNub';
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* Receive Remote Player Data
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
-multiplayer.subscribe({
-    backfill : true,
-    channel  : multiplayer.player.channel,
-    message  : function(msg) {
-        multiplayer.events.fire( msg.name, msg.data );
-    }
-});
+connect_world(multiplayer.player.channel);
+function connect_world(world_name) {
+    multiplayer.unsubscribe({ channel : multiplayer.player.channel });
+    multiplayer.subscribe({
+        backfill : true,
+        channel  : world_name,
+        message  : function(msg) {
+            multiplayer.events.fire( msg.name, msg.data );
+        }
+    });
+    multiplayer.player.channel = world_name;
+}
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* Send Remote Player Data
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 function send( name, data ) {
-    log("SENDING",name,data);
-
     multiplayer.publish({
-        callback : function(d){ log(d)},
         channel : multiplayer.player.channel,
         message : {
             name : name,
@@ -46,29 +46,12 @@ function send( name, data ) {
 /* Receive New Car Addition
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 multiplayer.events.bind( "champion", function(data) {
-    log(data);
-
-/*
-    if (!(data.player.car_id in cw_remoteCar_refs))
-        cw_remoteCars.push(cw_remoteCar_refs[data.player.car_id] = data);
-    else
-        cw_remoteCar_refs[data.player.car_id] = data;
-        */
-
-cw_carScores.push(data);
-    //....
-    //....
-    //cw_resetWorld();
-    //cw_resetWorld is a STOPGAP!!!!!!!!!!!!!
-    //cw_resetWorld is a STOPGAP!!!!!!!!!!!!!
-
-    // TODO remote cars replace existing vectors..... based on len of remoteCars.
-    // TODO remote cars replace existing vectors..... based on len of remoteCars.
-    // TODO remote cars replace existing vectors..... based on len of remoteCars.
-    // TODO remote cars replace existing vectors..... based on len of remoteCars.
-
+    cw_carScores.push(data);
 } );
 
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+/* Simple Log Function (Because Google Chrome Debugger Crashes)
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 function log() {
     PUBNUB.$("output").innerHTML += "<br>" + JSON.stringify(
         Array.prototype.slice.call(arguments)
@@ -175,8 +158,8 @@ function debug(str, clear) {
 }
 
 function showDistance(distance, height) {
-  distanceMeter.innerHTML = "distance: "+distance+" meters<br />";
-  distanceMeter.innerHTML += "height: "+height+" meters";
+  distanceMeter.innerHTML = "<strong>Distance: </strong>"+distance+" Meters<br>";
+  distanceMeter.innerHTML += "<strong>Height: </strong>"+height+" Meters";
   //minimarkerdistance.left = Math.round((distance + 5) * minimapscale) + "px";
   if(distance > minimapfogdistance) {
     fogdistance.width = 800 - Math.round(distance + 15) * minimapscale + "px";
@@ -487,8 +470,10 @@ function cw_generationZero() {
 
     cw_materializeGeneration();
 
-    document.getElementById("generation").innerHTML = "generation 0";
-    document.getElementById("population").innerHTML = "cars alive: "+generationSize;
+    document.getElementById("generation").innerHTML =
+        "<strong>Generations: </strong>0";
+    document.getElementById("population").innerHTML =
+        "<strong>Cars Alive: </strong>"+generationSize;
 
     ghost = ghost_create_ghost();
 }
@@ -525,11 +510,9 @@ function cw_nextGeneration() {
     cw_carScores[k].car_def.is_elite = true;
     cw_carScores[k].car_def.index = k;
 
-    //cw_carScores[k].car_def.uuid = multiplayer.player.uuid;
     send( "champion", cw_carScores[k] );
 
     newGeneration.push(cw_carScores[k].car_def);
-    //document.getElementById("bar"+k).src = "bluedot.png";
   }
   for(k = gen_champions; k < generationSize; k++) {
     var parent1 = cw_getParents();
@@ -555,9 +538,11 @@ function cw_nextGeneration() {
   leaderPosition = {};
   leaderPosition.x = 0;
   leaderPosition.y = 0;
-  document.getElementById("generation").innerHTML = "generation "+gen_counter;
+  document.getElementById("generation").innerHTML =
+    "<strong>Generations: </strong>"+gen_counter;
   document.getElementById("cars").innerHTML = "";
-  document.getElementById("population").innerHTML = "cars alive: "+generationSize;
+  document.getElementById("population").innerHTML =
+    "<strong>Cars Alive: <strong>"+generationSize;
 }
 
 function cw_getChampions() {
@@ -811,8 +796,8 @@ function cw_drawCars() {
 
     var uuid = myCar.car_def.uuid;
     if (uuid) {
-      ctx.strokeStyle = "#"+uuid;
-      ctx.fillStyle = "#eeeee2";
+      ctx.strokeStyle = "#eeeee2";
+      ctx.fillStyle   = "#"+uuid;
     }
 
     ctx.beginPath();
@@ -1021,7 +1006,8 @@ function simulationStep() {
     if(cw_carArray[k].checkDeath()) {
       cw_carArray[k].kill();
       cw_deadCars++;
-      document.getElementById("population").innerHTML = "cars alive: " + (generationSize-cw_deadCars);
+      document.getElementById("population").innerHTML =
+        "<strong>Cars Alive: </strong>" + (generationSize-cw_deadCars);
       if(cw_deadCars >= generationSize) {
         cw_newRound();
       }
@@ -1096,7 +1082,6 @@ function cw_kill() {
 
 window.cw_resetPopulation = cw_resetPopulation;
 function cw_resetPopulation() {
-  //multiplayer.publishcar = true;
 
   document.getElementById("generation").innerHTML = "";
   document.getElementById("cars").innerHTML       = "";
@@ -1121,11 +1106,12 @@ function cw_resetPopulation() {
 }
 
 function cw_resetWorld() {
+  floorseed = document.getElementById("newseed").value;
+  connect_world(floorseed);
   cw_stopSimulation();
   for (b = world.m_bodyList; b; b = b.m_next) {
     world.DestroyBody(b);
   }
-  floorseed = document.getElementById("newseed").value;
   Math.seedrandom(floorseed);
   cw_createFloor();
   cw_drawMiniMap();
@@ -1134,8 +1120,12 @@ function cw_resetWorld() {
   cw_startSimulation();
 }
 
+window.cw_confirmResetWorld = cw_confirmResetWorld;
 function cw_confirmResetWorld() {
-  if(confirm('Really reset world?')) {
+
+  multiplayer.sub
+
+  if(confirm('Okay Join This World?')) {
     cw_resetWorld();
   } else {
     return false;
