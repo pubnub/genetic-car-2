@@ -168,7 +168,7 @@ PUBNUB.init({
 
         setTimeout( function() {
             PUBNUB.css( admin, { display : 'none' } );
-        }, 5000 );
+        }, 15000 );
     }
 });
 

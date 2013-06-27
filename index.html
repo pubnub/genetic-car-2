@@ -207,7 +207,9 @@
         width: 600px;
     }
     #remotecars {
+        background-color: rgba( 255,255,255,0.8 );
         position: absolute;
+        
         top: 340px;
         left: 20px;
         font-size: 30px;
@@ -241,6 +243,17 @@
         border-radius: 10px;
         padding: 10px;
         height: 260px;
+    }
+    #homage {
+        color: rgba(0,0,0,0.5);
+        margin: 20px;
+    }
+    #documentation {
+        margin: 20px;
+    }
+    #version {
+        text-align: center;
+        margin: 10px;
     }
     </style>
 </head><body>
@@ -279,8 +292,11 @@
     <div id="data">
 
     <h1 class="center">Genetic Cars 2: Multiplayer</h1>
-    <h3>Distributed Computing Powered by
-    <a target=admin1 href="https://admin.pubnub.com">PubNub Real-time Network</a></h3>
+    <div id="version">VERSION 2.33</div>
+    <h3>
+        Distributed Computing Powered by
+        <a target=admin1 href="https://admin.pubnub.com">PubNub Real-time Network</a>
+    </h3>
 
     <div id="twitterbtn">
     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://gencar.co" data-text="Multiplayer Genetic Algorithm 2D Car" data-via="PubNub" data-size="large" data-hashtags="javascript">Tweet</a>
@@ -376,59 +392,63 @@
 
 </div></div></div>
 
-      <h3>Genetic Cars 2: About</h3>
-      This game is connected to the world,
-      all players are sharing their best cars each game round.
+      <div id=homage> Homage to Rafael Matsunaga. </div>
 
-      Only the dominant cars win.
+      <div id=documentation>
+          <h3>Genetic Cars 2: About</h3>
+          This game is connected to the world,
+          all players are sharing their best cars each game round.
 
-      The TOP car from <strong>each player</strong> in the world is
-      added to <strong>your car list</strong> each game cycle.
+          Only the dominant cars win.
 
-      This car is therefore added to your gene pool and is then genetically
-      spliced and paired with your other cars.
+          The TOP car from <strong>each player</strong> in the world is
+          added to <strong>your car list</strong> each game cycle.
 
-      Top cars are transmitted around the world from other players
-      who are online RIGHT NOW
-      using <a target=websitep href="http://www.pubnub.com">WebSockets style technology for data streaming ( PubNub )</a>.
+          This car is therefore added to your gene pool and is then genetically
+          spliced and paired with your other cars.
 
-      <h3>PubNub Real-time Network</h3>
-      Do you like this freebie?
-      Want to get more stuff like this?<br/>
-      Subscribe to
-      <a target=pntwitter href="http://twitter.com/PubNub">@PubNub</a>
-      news and updates to stay tuned on great designs.<br/>
+          Top cars are transmitted around the world from other players
+          who are online RIGHT NOW
+          using <a target=websitep href="http://www.pubnub.com">WebSockets style technology for data streaming ( PubNub )</a>.
 
-      <h3>Genetic Cars 2: GitHub Open Source Code - JavaScript</h3>
-      <a target=github href="https://github.com/pubnub/genetic-car-2">https://github.com/pubnub/genetic-car-2</a> - Click Here to Download/Fork the GitHub JavaScript Code directly.
+          <h3>PubNub Real-time Network</h3>
+          Do you like this freebie?
+          Want to get more stuff like this?<br/>
+          Subscribe to
+          <a target=pntwitter href="http://twitter.com/PubNub">@PubNub</a>
+          news and updates to stay tuned on great designs.<br/>
 
-      <h3>Genetic Cars 2: Options/Controls</h3>
-      <strong>Join World: </strong> The same seed always creates the same track, so you can agree on a seed with your friends and compete. :)<br />
+          <h3>Genetic Cars 2: GitHub Open Source Code - JavaScript</h3>
+          <a target=github href="https://github.com/pubnub/genetic-car-2">https://github.com/pubnub/genetic-car-2</a> - Click Here to Download/Fork the GitHub JavaScript Code directly.
 
-      <strong>Mutation Rate: </strong> The chance that each gene in each individual will mutate to a random value when a new generation is born.<br />
+          <h3>Genetic Cars 2: Options/Controls</h3>
+          <strong>Join World: </strong> The same seed always creates the same track, so you can agree on a seed with your friends and compete. :)<br />
 
-      <h3>Genetic Cars 2: HTML5 Canvas Graphs</h3>
-      <strong>Red: </strong> Top score in each generation.<br />
-      <strong>Green: </strong> Average of the top 10 cars in each generation.<br />
-      <strong>Blue: </strong> Average of the entire generation.
+          <strong>Mutation Rate: </strong> The chance that each gene in each individual will mutate to a random value when a new generation is born.<br />
 
-      <h3>Genetic Cars 2: But what about JavaScript?</h3>
-      This program uses a simple genetic algorithm to evolve random two-wheeled shapes into cars over generations.
-      Loosely based on <a target=baxcar2d href="http://boxcar2d.com/">BoxCar2D</a>, but
-      written from scratch, only using the same physics engine (<a target=box2d href="http://box2d.org/">box2d</a>).<br />
-      seedrandom.js written by <a target=david href="http://davidbau.com/">David Bau</a>. (thanks!)
+          <h3>Genetic Cars 2: HTML5 Canvas Graphs</h3>
+          <strong>Red: </strong> Top score in each generation.<br />
+          <strong>Green: </strong> Average of the top 10 cars in each generation.<br />
+          <strong>Blue: </strong> Average of the entire generation.
 
-      <h3>Genetic Cars 2: Distributed Genome Connectivity</h3>
-      The genome consists of:<br />
-      - Shape: (8 genes, 1 per vertex)<br />
-      - Wheel size: (2 genes, 1 per wheel)<br />
-      - Wheel position: (2 genes, 1 per wheel)<br />
-      - Wheel density: (2 genes, 1 per wheel) darker wheels mean denser wheels
+          <h3>Genetic Cars 2: But what about JavaScript?</h3>
+          This program uses a simple genetic algorithm to evolve random two-wheeled shapes into cars over generations.
+          Loosely based on <a target=baxcar2d href="http://boxcar2d.com/">BoxCar2D</a>, but
+          written from scratch, only using the same physics engine (<a target=box2d href="http://box2d.org/">box2d</a>).<br />
+          seedrandom.js written by <a target=david href="http://davidbau.com/">David Bau</a>. (thanks!)
 
-      <h3>Genetic Cars 2: JavaScript Random Genetic Generation</h3>
-      This is not as deterministic as it should be, so your best car may not perform as well as it once did. The terrain gets more complex with distance.<br />
-      I'm not in the mood to deal with checking if all scripts have loaded before running, so refresh the page if things seem whack.<br />
-      Written originally by <strong><a target=rednut href="http://rednuht.org">this guy</a></strong>.<br />
+          <h3>Genetic Cars 2: Distributed Genome Connectivity</h3>
+          The genome consists of:<br />
+          - Shape: (8 genes, 1 per vertex)<br />
+          - Wheel size: (2 genes, 1 per wheel)<br />
+          - Wheel position: (2 genes, 1 per wheel)<br />
+          - Wheel density: (2 genes, 1 per wheel) darker wheels mean denser wheels
+
+          <h3>Genetic Cars 2: JavaScript Random Genetic Generation</h3>
+          This is not as deterministic as it should be, so your best car may not perform as well as it once did. The terrain gets more complex with distance.<br />
+          I'm not in the mood to deal with checking if all scripts have loaded before running, so refresh the page if things seem whack.<br />
+          Written originally by <strong><a target=rednut href="http://rednuht.org">this guy</a></strong>.<br />
+      </div>
 
     </div>
     <div name="minimapmarker" class="minimapmarker"></div>
