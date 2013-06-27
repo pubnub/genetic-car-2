@@ -167,8 +167,8 @@ PUBNUB.init({
         PUBNUB.css( admin, { display : 'block' } );
 
         setTimeout( function() {
-            PUBNUB.css( admin, { display : 'none' } );
-        }, 15000 );
+            //PUBNUB.css( admin, { display : 'none' } );
+        }, 25000 );
     }
 });
 
