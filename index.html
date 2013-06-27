@@ -157,6 +157,16 @@
         left: -20px;
       }
 
+    .healthbar {
+        text-shadow: 1px 1px 4px #000;
+        color: #eeeee2;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
       .center {
         text-align: center;
       }
@@ -187,6 +197,19 @@
     #explanation {
         width: 600px;
     }
+    #remotecars {
+        position: absolute;
+        top: 360px;
+        left: 20px;
+        font-size: 30px;
+        line-height: 50px;
+    }
+    #remotecarsnum {
+        font-family: "Droid Serif";
+        font-size: 40px;
+        line-height: 50px;
+        font-weight: 700;
+    }
     </style>
 </head><body>
     <canvas id="mainbox" width="800" height="400"></canvas>
@@ -194,6 +217,9 @@
       <div id="generation"></div>
       <div id="population"></div>
       <div id="distancemeter"></div>
+    </div>
+    <div id="remotecars">
+        World Champion Cars: <span id="remotecarsnum">0</span>
     </div>
     <a
         target="pubnub-admin"
@@ -214,14 +240,14 @@
       <div id="minimapcamera"></div>
     </div>
     <div id="topscoreholder">
-    <input type="button" value="View top replay" onclick="cw_toggleGhostReplay(this)" /><br />
       <div id="topscores"></div>
     </div>
     <div id="debug"></div>
     <div id="data">
 
     <h1 class="center">Genetic Cars 2: Distributed</h1>
-    <h3>Distributed Computing Powered by PubNub Real-time Network</h3>
+    <h3>Distributed Computing Powered by
+    <a href="https://admin.pubnub.com">PubNub Real-time Network</a></h3>
 
         <a
         href="#"
@@ -237,7 +263,7 @@
 
       <div>
         Join World:
-        <input type="text" value="PubNub" id="newseed" />
+        <input type="text" value="PubNub-World-1" id="newseed" />
         <input type="button" value="Go!" id="gobtn" onclick="cw_confirmResetWorld()" />
       </div>
       <div>
@@ -281,48 +307,56 @@
     <div id="explanation">
       <div id=output></div>
       <h3>Genetic Cars 2: About</h3>
+      This game is connected to the world,
+      all players are sharing their best cars each game round.
+
       Only the dominant cars win.
 
       The TOP car from <strong>each player</strong> in the world is
-      added to your car list each cycle.
+      added to <strong>your car list</strong> each game cycle.
 
       This car is therefore added to your gene pool and is then genetically
       spliced and paired with your other cars.
 
       Top cars are transmitted around the world from other players
       who are online RIGHT NOW
-      using WebSockets style technology for data streaming ( PubNub ).
+      using <a href="http://www.pubnub.com">WebSockets style technology for data streaming ( PubNub )</a>.
+
+      <h3>PubNub Real-time Network</h3>
+      Do you like this freebie?
+      Want to get more stuff like this?<br/>
+      Subscribe to
+      <a href="http://twitter.com/PubNub">@PubNub</a>
+      news and updates to stay tuned on great designs.<br/>
 
       <h3>Genetic Cars 2: Options/Controls</h3>
       <strong>Join World: </strong> The same seed always creates the same track, so you can agree on a seed with your friends and compete. :)<br />
 
       <strong>Mutation Rate: </strong> The chance that each gene in each individual will mutate to a random value when a new generation is born.<br />
 
-      <strong>View top replay: </strong> Pause the current simulation and show the top performing car. Click a second time to resume simulation.
-
-      <h3>Graph</h3>
+      <h3>Genetic Cars 2: HTML5 Canvas Graphs</h3>
       <strong>Red: </strong> Top score in each generation.<br />
       <strong>Green: </strong> Average of the top 10 cars in each generation.<br />
       <strong>Blue: </strong> Average of the entire generation.
 
-      <h3>But what is it?</h3>
-      This program uses a simple genetic algorithm to evolve random two-wheeled shapes into cars over generations. Loosely based on <a href="http://boxcar2d.com/">BoxCar2D</a>, but
+      <h3>Genetic Cars 2: But what about JavaScript?</h3>
+      This program uses a simple genetic algorithm to evolve random two-wheeled shapes into cars over generations.
+      Loosely based on <a href="http://boxcar2d.com/">BoxCar2D</a>, but
       written from scratch, only using the same physics engine (<a href="http://box2d.org/">box2d</a>).<br />
       seedrandom.js written by <a href="http://davidbau.com/">David Bau</a>. (thanks!)
 
-      <h3>Genome</h3>
+      <h3>Genetic Cars 2: Distributed Genome Connectivity</h3>
       The genome consists of:<br />
       - Shape: (8 genes, 1 per vertex)<br />
       - Wheel size: (2 genes, 1 per wheel)<br />
       - Wheel position: (2 genes, 1 per wheel)<br />
       - Wheel density: (2 genes, 1 per wheel) darker wheels mean denser wheels
 
-      <h3>Blurb</h3>
+      <h3>Genetic Cars 2: JavaScript Random Genetic Generation</h3>
       This is not as deterministic as it should be, so your best car may not perform as well as it once did. The terrain gets more complex with distance.<br />
       I'm not in the mood to deal with checking if all scripts have loaded before running, so refresh the page if things seem whack.<br />
-      Written by <a href="http://rednuht.org">this guy</a>.<br />
+      Written originally by <a href="http://rednuht.org">this guy</a>.<br />
 
-      <a href="mailto:rednuht@rednuht.org">Send me food</a>.
     </div>
     <div name="minimapmarker" class="minimapmarker"></div>
     <div name="healthbar" class="healthbar" onclick="cw_setCameraTarget(this.car_index)">

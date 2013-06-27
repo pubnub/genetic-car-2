@@ -11,7 +11,7 @@ var multiplayer = PUBNUB.init({
 });
 
 multiplayer.player         = {};
-multiplayer.player.channel = 'PubNub';
+multiplayer.player.channel = document.getElementById("newseed").value;
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* Receive Remote Player Data
@@ -45,8 +45,13 @@ function send( name, data ) {
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* Receive New Car Addition
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+var remotecarsnum = 0;
 multiplayer.events.bind( "champion", function(data) {
+    
+    data.car_def.remoted = true;
     cw_carScores.push(data);
+    PUBNUB.$("remotecarsnum").innerHTML = ++remotecarsnum;
+
 } );
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -101,7 +106,7 @@ var cw_graphTop        = [];
 var cw_graphElite      = [];
 var cw_graphAverage    = [];
 
-var gen_champions      = 1;
+var gen_champions      = 10;
 var gen_parentality    = 0.2;
 var gen_mutation       = 0.1;
 var gen_counter        = 0;
@@ -205,6 +210,8 @@ cw_Car.prototype.__constructor = function(car_def) {
   // Healthbar BG Color
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
+      document.getElementById("health"+car_def.index).innerHTML =
+        car_def.uuid + (car_def.remoted?" - Remote Champion":"");
   }
 
   this.chassis = cw_createChassis(car_def.vertex_list);
@@ -510,7 +517,8 @@ function cw_nextGeneration() {
     cw_carScores[k].car_def.is_elite = true;
     cw_carScores[k].car_def.index = k;
 
-    send( "champion", cw_carScores[k] );
+    // Only transmit #1 Top
+    k||send( "champion", cw_carScores[k] );
 
     newGeneration.push(cw_carScores[k].car_def);
   }
