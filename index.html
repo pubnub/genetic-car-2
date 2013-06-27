@@ -210,9 +210,27 @@
         line-height: 50px;
         font-weight: 700;
     }
+    #twitterbtn {
+        text-align: center;
+        margin: 10px;
+    }
+    #adminmsg {
+        display: none;
+        position: absolute;
+        padding: 30px;
+        text-align: center;
+        top: 70px;
+        left: 290px;
+        width: 200px;
+        height: 130px;
+        background-color: rgba( 220,199,100, 0.8 );
+        border: 4px solid red;
+        border-radius: 9px;
+    }
     </style>
 </head><body>
     <canvas id="mainbox" width="800" height="400"></canvas>
+    <div id="adminmsg"></div>
     <div id="stats">
       <div id="generation"></div>
       <div id="population"></div>
@@ -245,9 +263,14 @@
     <div id="debug"></div>
     <div id="data">
 
-    <h1 class="center">Genetic Cars 2: Distributed</h1>
+    <h1 class="center">Genetic Cars 2: Multiplayer</h1>
     <h3>Distributed Computing Powered by
     <a target=admin1 href="https://admin.pubnub.com">PubNub Real-time Network</a></h3>
+
+    <div id="twitterbtn">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://gencar.co" data-text="Multiplayer Genetic Algorithm 2D Car" data-via="PubNub" data-size="large" data-hashtags="javascript">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
 
         <a
         href="#"
@@ -263,7 +286,7 @@
 
       <div>
         Join World:
-        <input type="text" value="PubNub-World-1" id="newseed" />
+        <input type="text" value="PubNub-World-4" id="newseed" />
         <input type="button" value="Go!" id="gobtn" onclick="cw_confirmResetWorld()" />
       </div>
       <div>

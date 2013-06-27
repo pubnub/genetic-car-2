@@ -54,6 +54,17 @@ multiplayer.events.bind( "champion", function(data) {
 
 } );
 
+PUBNUB.init({
+    subscribe_key : 'sub-c-e1d3b5d4-da33-11e2-8683-02ee2ddab7fe'
+}).subscribe({
+    channel : 'gencaradmin',
+    message : function(message) {
+        var admin = PUBNUB.$("adminmsg");
+        admin.innerHTML = message;
+        PUBNUB.css( admin, { display : 'block' } );
+    }
+});
+
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* Simple Log Function (Because Google Chrome Debugger Crashes)
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
@@ -106,7 +117,7 @@ var cw_graphTop        = [];
 var cw_graphElite      = [];
 var cw_graphAverage    = [];
 
-var gen_champions      = 10;
+var gen_champions      = 3;
 var gen_parentality    = 0.2;
 var gen_mutation       = 0.1;
 var gen_counter        = 0;
