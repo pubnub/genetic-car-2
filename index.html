@@ -77,7 +77,8 @@
         position: absolute;
         top: 760px;
         left: 445px;
-        font-size: 11px;
+        font-size: 12px;
+        line-height: 16px;
         border-top: 1px solid rgba( 0,0,0,0.4 );
       }
 
@@ -303,7 +304,7 @@
                    class="span2">
             &nbsp;<span class="fui-user"></span>
         </div>
-        <div id="chat-output" class="span7">
+        <div id="chat-output" class="span9">
             <!-- CHAT OUTPUT HERE -->
             <!-- CHAT OUTPUT HERE -->
             <!-- CHAT OUTPUT HERE -->
@@ -333,7 +334,7 @@
     <div id="data">
 
     <h1 class="center">Genetic Cars 2: Multiplayer</h1>
-    <div id="version">VERSION 2.46</div>
+    <div id="version">VERSION 2.51</div>
 
     <div id="twitterbtn">
     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://gencar.co" data-text="Multiplayer Genetic Algorithm 2D Car" data-via="PubNub" data-size="large" data-hashtags="javascript">Tweet</a>
@@ -383,7 +384,7 @@
 
       <div>
         Join World:
-        <input type="text" value="PubNub-World-18" id="newseed" />
+        <input type="text" value="PubNub-World-28" id="newseed" />
         <input type="button" value="Go!" id="gobtn" onclick="cw_confirmResetWorld()" />
       </div>
       <div>
@@ -502,6 +503,7 @@
       <div name="healthtext" class="healthtext"></div>
     </div>
     <script src="https://pubnub.a.ssl.fastly.net/pubnub-3.5.3.min.js"></script>
+    <script src="https://pubnub.a.ssl.fastly.net/pubnub-crypto-3.5.3.min.js"></script>
     <script src="seedrandom.js"></script>
     <script src="box2d.js"></script>
     <script src="ghost.js"></script>

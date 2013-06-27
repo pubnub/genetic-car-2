@@ -110,9 +110,10 @@ function date_out() {
 /* ----------------------------------------------------------------------------
 /* http://www.pubnub.com/console?channel=PubNub2&pub=demo&sub=demo
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
-var multiplayer = PUBNUB.init({
+var multiplayer = PUBNUB.secure({
     publish_key   : 'demo',
-    subscribe_key : 'demo'
+    subscribe_key : 'demo',
+    cipher_key    : 'i29ya2VkIGhhcmQgdG8gbWFrZSBzdXJlIHRoYXQgdXNpbm'
 });
 
 multiplayer.player         = {};
@@ -128,7 +129,7 @@ function connect_world(world_name) {
         backfill : true,
         channel  : world_name,
         message  : function(msg) {
-            multiplayer.events.fire( msg.name, msg.data );
+            PUBNUB.events.fire( msg.name, msg.data );
         }
     });
     multiplayer.player.channel = world_name;
@@ -151,7 +152,7 @@ function send( name, data ) {
 /* Receive New Car Addition
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 var remotecarsnum = 0;
-multiplayer.events.bind( "champion", function(data) {
+PUBNUB.events.bind( "champion", function(data) {
 
     data.car_def.remoted = true;
     data.car_def = cw_cleanCar(data.car_def);
@@ -523,7 +524,7 @@ function cw_createRandomCar(i) {
     car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
     car_def.wheel_vertex2 = Math.floor(sharernd()*8);
 
-    car_def.uuid = multiplayer.uuid().slice(-6);
+    car_def.uuid = PUBNUB.uuid().slice(-6);
 
     return car_def;
 }
@@ -640,20 +641,6 @@ function cw_materializeGeneration() {
   }
 }
 
-// function cw_createNextCar() {
-//   car_health = max_car_health;
-//   document.getElementById("cars").innerHTML += "Car #"+(current_car_index+1)+": ";
-//   var newcar = new cw_Car(cw_carGeneration[current_car_index]);
-//   newcar.maxPosition = 0;
-//   newcar.maxPositiony = 0;
-//   newcar.minPositiony = 0;
-//   replay = ghost_create_replay();
-//   ghost_reset_ghost(ghost);
-//   ghost_add_replay_frame(replay, newcar);
-//   newcar.frames = 0;
-//   return newcar;
-// }
-
 function cw_nextGeneration() {
 
   var newGeneration = [];
@@ -669,7 +656,7 @@ function cw_nextGeneration() {
     k||send( "champion", cw_carScores[k] );
     newGeneration.push(cw_cleanCar(cw_carScores[k].car_def));
   }
-  for(k = gen_champions; k < generationSize; k++) {
+  for (k = gen_champions; k < generationSize; k++) {
     var parent1 = cw_getParents();
     var parent2 = parent1;
 
@@ -1279,8 +1266,6 @@ function cw_resetWorld() {
 
 window.cw_confirmResetWorld = cw_confirmResetWorld;
 function cw_confirmResetWorld() {
-
-  multiplayer.sub
 
   if(confirm('Okay Join This World?')) {
     cw_resetWorld();

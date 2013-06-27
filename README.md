@@ -1,4 +1,7 @@
 # Genetic Cars 2: About
+
+![Multiplayer Genetic Cars PubNub](http://gencar.co.s3.amazonaws.com/multiplayer-genetic-cars-pubnub.png "Multiplayer Genetic Cars PubNub")
+
 This game is connected to the world,
 all players are sharing their best cars each game round.
 
