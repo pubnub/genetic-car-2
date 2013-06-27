@@ -49,7 +49,7 @@ function date_out() {
             message : {
                 name : clean(cname.value),
                 text : clean(input.value),
-                time : date_out()
+                time : ''
             },
             x : (input.value='')
         });
@@ -63,6 +63,8 @@ function date_out() {
 
         // Clean Precaution
         message.text = clean(message.text);
+        message.time = date_out();//clean(message.time);
+        message.name = clean(message.name);
 
         // Don't Show Blank Messages
         if (!message.text.replace( /\s/g, '' )) return;
