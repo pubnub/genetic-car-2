@@ -207,6 +207,13 @@ var minimapcamera      = document.getElementById("minimapcamera").style;
 
 var graphcanvas        = document.getElementById("graphcanvas");
 var graphctx           = graphcanvas.getContext("2d");
+var graphlines         = {
+  "s0": document.getElementById("s0"),
+  "s25": document.getElementById("s25"),
+  "s50": document.getElementById("s50"),
+  "s75": document.getElementById("s75"),
+  "s100": document.getElementById("s100")
+};
 var graphheight        = 200;
 var graphwidth         = 400;
 
@@ -1065,6 +1072,7 @@ function cw_plotAverage() {
 
 function plot_graphs() {
   cw_storeGraphScores();
+  cw_graphMaxAxisY();
   cw_clearGraphics();
   cw_plotAverage();
   cw_plotElite();
@@ -1089,8 +1097,18 @@ function cw_average(scores) {
   return sum/generationSize;
 }
 
+function cw_graphMaxAxisY() {
+  graphheight = Math.max.apply(Math, Array.prototype.map.call(cw_topScores, function(x) {return x.x;}));
+  graphheight = parseInt(graphheight/100)*100+100;
+  return graphheight;
+}
+
 function cw_clearGraphics() {
   graphcanvas.width = graphcanvas.width;
+  graphlines["s25"].innerHTML = Math.round(graphheight * 0.25);
+  graphlines["s50"].innerHTML = Math.round(graphheight * 0.50);
+  graphlines["s75"].innerHTML = Math.round(graphheight * 0.75);
+  graphlines["s100"].innerHTML = graphheight;
   graphctx.translate(0,graphheight);
   graphctx.scale(1,-1);
   graphctx.lineWidth = 1;
