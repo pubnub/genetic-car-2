@@ -81,7 +81,7 @@ function date_out() {
     function connect() {
         pubnub.history({
             channel  : channel,
-            limit    : 50,
+            limit    : 10,
             callback : function(msgs) {
                 if (msgs.length > 1)
                     pubnub.each( msgs[0], chat );
@@ -152,8 +152,9 @@ function send( name, data ) {
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 var remotecarsnum = 0;
 multiplayer.events.bind( "champion", function(data) {
-    
+
     data.car_def.remoted = true;
+    data.car_def = cw_cleanCar(data.car_def);
     cw_carScores.push(data);
     PUBNUB.$("remotecarsnum").innerHTML = ++remotecarsnum;
 
@@ -481,6 +482,33 @@ function cw_createWheel(radius, density) {
   return body;
 }
 
+function cw_cleanCar(car_def) {
+    if (car_def.wheel_radius1 > wheelMaxRadius)
+        car_def.wheel_radius1 = wheelMaxRadius;
+    if (car_def.wheel_radius1 < wheelMinRadius)
+        car_def.wheel_radius1 = wheelMinRadius;
+
+    if (car_def.wheel_radius2 > wheelMaxRadius)
+        car_def.wheel_radius2 = wheelMaxRadius;
+    if (car_def.wheel_radius2 < wheelMinRadius)
+        car_def.wheel_radius2 = wheelMinRadius;
+
+    if (car_def.wheel_density1 > wheelMaxDensity)
+        car_def.wheel_density1 = wheelMaxDensity;
+    if (car_def.wheel_density1 < wheelMinDensity)
+        car_def.wheel_density1 = wheelMinDensity;
+
+    if (car_def.wheel_density2 > wheelMaxDensity)
+        car_def.wheel_density2 = wheelMaxDensity;
+    if (car_def.wheel_density2 < wheelMinDensity)
+        car_def.wheel_density2 = wheelMinDensity;
+
+    car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
+    car_def.wheel_vertex2 = Math.floor(sharernd()*8);
+
+    return car_def;
+}
+
 function cw_createRandomCar(i) {
     var car_def = {};
 
@@ -646,8 +674,7 @@ function cw_nextGeneration() {
 
     // Only transmit #1 Top
     k||send( "champion", cw_carScores[k] );
-
-    newGeneration.push(cw_carScores[k].car_def);
+    newGeneration.push(cw_cleanCar(cw_carScores[k].car_def));
   }
   for(k = gen_champions; k < generationSize; k++) {
     var parent1 = cw_getParents();
