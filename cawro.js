@@ -311,7 +311,7 @@ cw_Car.prototype.__constructor = function(car_def) {
   this.healthBarText.innerHTML = car_def.index;
   this.minimapmarker = document.getElementById("bar"+car_def.index).style;
 
-  if(this.is_elite) {
+  if (this.is_elite) {
     this.healthBar.backgroundColor = "#44c";
     document.getElementById("bar"+car_def.index).style.borderLeft = "1px solid #44c";
     document.getElementById("bar"+car_def.index).innerHTML = car_def.index;
@@ -325,7 +325,7 @@ cw_Car.prototype.__constructor = function(car_def) {
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        car_def.uuid + (car_def.remoted?" - Remote Champion":"");
+        car_def.uuid + (car_def.remoted?" - Remote Champion":" - Your Car");
   }
 
   this.chassis = cw_createChassis(car_def.vertex_list);
