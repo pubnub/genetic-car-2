@@ -32,10 +32,12 @@ function car_encode( car_def, zeroes ) {
     return car_def;
 }
 function car_update_validator(car_def) {
-    car_def.validator = ''+(Math.random() * new Date());
+    car_def.t = +(new Date());
+    car_def.validator = ''+(Math.random() * car_def.t);
 }
 function car_validate( car_def, zeroes ) {
-    return car_hash(car_def).slice( 0, 3 ) === (zeroes||"000");
+    return Math.abs(car_def.t - new Date()) < 30000 &&
+        car_hash(car_def).slice( 0, 3 ) === (zeroes||"000");
 }
 function car_hash(car_def) {
     return SHA1(JSON.stringify(car_def));
@@ -342,24 +344,24 @@ cw_Car.prototype.__constructor = function(car_def) {
   this.is_elite = car_def.is_elite;
   this.healthBar = document.getElementById("health"+car_def.index).style;
   this.healthBarText = document.getElementById("health"+car_def.index).nextSibling.nextSibling;
-  this.healthBarText.innerHTML = car_def.index;
+  this.healthBarText.innerHTML = clean(car_def.index);
   this.minimapmarker = document.getElementById("bar"+car_def.index).style;
 
   if (this.is_elite) {
     this.healthBar.backgroundColor = "#44c";
     document.getElementById("bar"+car_def.index).style.borderLeft = "1px solid #44c";
-    document.getElementById("bar"+car_def.index).innerHTML = car_def.index;
+    document.getElementById("bar"+car_def.index).innerHTML = clean(car_def.index);
   } else {
     this.healthBar.backgroundColor = "#c44";
     document.getElementById("bar"+car_def.index).style.borderLeft = "1px solid #c44";
-    document.getElementById("bar"+car_def.index).innerHTML = car_def.index;
+    document.getElementById("bar"+car_def.index).innerHTML = clean(car_def.index);
   }
 
   // Healthbar BG Color
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        car_def.uuid + (car_def.remoted?" - Remote":" - Your") +
+        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - Remote":" - Your") +
         (car_def.is_elite ? " Champion" : " Car");
   }
 
@@ -504,7 +506,6 @@ function cw_createWheel(radius, density) {
 }
 
 function cw_cleanCar(car_def) {
-    return car_def;
     if (car_def.wheel_radius1 > wheelMaxRadius)
         car_def.wheel_radius1 = wheelMaxRadius;
     if (car_def.wheel_radius1 < wheelMinRadius)
@@ -525,8 +526,8 @@ function cw_cleanCar(car_def) {
     if (car_def.wheel_density2 < wheelMinDensity)
         car_def.wheel_density2 = wheelMinDensity;
 
-    car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
-    car_def.wheel_vertex2 = Math.floor(sharernd()*8);
+    car_def.wheel_vertex1 = Math.round(car_def.wheel_vertex1) % 8;
+    car_def.wheel_vertex2 = Math.round(car_def.wheel_vertex2) % 8;
 
     return car_def;
 }
@@ -550,7 +551,7 @@ function cw_createRandomCar(i) {
     car_def.vertex_list.push(new b2Vec2(sharernd()*chassisMaxAxis + chassisMinAxis,-sharernd()*chassisMaxAxis - chassisMinAxis));
 
     car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
-    car_def.wheel_vertex2 = Math.floor(sharernd()*8);
+    car_def.wheel_vertex2 = Math.floor(sharernd()*8) % 8;
 
     car_def.uuid = PUBNUB.uuid().slice(-6);
 
