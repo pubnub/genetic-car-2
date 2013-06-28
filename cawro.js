@@ -176,7 +176,7 @@ function send( name, data ) {
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 var remotecarsnum = 0;
 PUBNUB.events.bind( "champion", function(data) {
-    if (!car_validate(data.car_def)) return;
+    if (!car_validate(data)) return;
     data.car_def.remoted = true;
     data.car_def = cw_cleanCar(data.car_def);
     cw_carScores.push(data);
@@ -355,7 +355,8 @@ cw_Car.prototype.__constructor = function(car_def) {
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        car_def.uuid + (car_def.remoted?" - Remote Champion":" - Your Car");
+        car_def.uuid + (car_def.remoted?" - Remote":" - Your") +
+        (car_def.is_elite ? " Champion" : " Car");
   }
 
   this.chassis = cw_createChassis(car_def.vertex_list);
@@ -676,7 +677,7 @@ function cw_nextGeneration() {
 
     // Only transmit #1 Top
     if (!k) {
-        car_encode(cw_carScores[k].car_def);
+        car_encode(cw_carScores[k]);
         send( "champion", cw_carScores[k] );
     }
     newGeneration.push(cw_cleanCar(cw_carScores[k].car_def));
