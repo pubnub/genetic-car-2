@@ -506,7 +506,6 @@ function cw_createWheel(radius, density) {
 }
 
 function cw_cleanCar(car_def) {
-    return car_def;
     if (car_def.wheel_radius1 > wheelMaxRadius)
         car_def.wheel_radius1 = wheelMaxRadius;
     if (car_def.wheel_radius1 < wheelMinRadius)
@@ -527,8 +526,8 @@ function cw_cleanCar(car_def) {
     if (car_def.wheel_density2 < wheelMinDensity)
         car_def.wheel_density2 = wheelMinDensity;
 
-    car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
-    car_def.wheel_vertex2 = Math.floor(sharernd()*8);
+    car_def.wheel_vertex1 = Math.round(car_def.wheel_vertex1) % 8;
+    car_def.wheel_vertex2 = Math.round(car_def.wheel_vertex2) % 8;
 
     return car_def;
 }
@@ -552,7 +551,7 @@ function cw_createRandomCar(i) {
     car_def.vertex_list.push(new b2Vec2(sharernd()*chassisMaxAxis + chassisMinAxis,-sharernd()*chassisMaxAxis - chassisMinAxis));
 
     car_def.wheel_vertex1 = Math.floor(sharernd()*8) % 8;
-    car_def.wheel_vertex2 = Math.floor(sharernd()*8);
+    car_def.wheel_vertex2 = Math.floor(sharernd()*8) % 8;
 
     car_def.uuid = PUBNUB.uuid().slice(-6);
 
