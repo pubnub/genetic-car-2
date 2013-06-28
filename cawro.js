@@ -500,6 +500,7 @@ function cw_createWheel(radius, density) {
 }
 
 function cw_cleanCar(car_def) {
+    return car_def;
     if (car_def.wheel_radius1 > wheelMaxRadius)
         car_def.wheel_radius1 = wheelMaxRadius;
     if (car_def.wheel_radius1 < wheelMinRadius)
