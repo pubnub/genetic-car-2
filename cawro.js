@@ -19,6 +19,27 @@ function date_out() {
     } );
 }
 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// 
+// Hashcash Management
+// 
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+function car_encode( car_def, zeroes ) {
+    car_update_validator(car_def);
+    while (!car_validate( car_def, zeroes )) {
+        car_update_validator(car_def);
+    }
+    return car_def;
+}
+function car_update_validator(car_def) {
+    car_def.validator = ''+(Math.random() * new Date());
+}
+function car_validate( car_def, zeroes ) {
+    return car_hash(car_def).slice( 0, 3 ) === (zeroes||"000");
+}
+function car_hash(car_def) {
+    return SHA1(JSON.stringify(car_def));
+}
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // 
@@ -44,19 +65,25 @@ function date_out() {
     function send() {
         if (!input.value) return;
 
+        var message = {
+            name : clean(cname.value),
+            text : clean(input.value),
+            time : ''
+        };
+
+        car_encode( message, "000" );
+
         return pubnub.publish({
             channel : channel,
-            message : {
-                name : clean(cname.value),
-                text : clean(input.value),
-                time : ''
-            },
+            message : message,
             x : (input.value='')
         });
     }
 
     // Append Chat Message
     function chat(message) {
+        if (!car_validate( message, "000" )) return;
+
         // Default Name
         if (!('name' in message)) message.name = "Robert";
         message.name = message.name.slice( 0, 10 );
@@ -101,29 +128,6 @@ function date_out() {
     });
     
 })();
-
-
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-// 
-// Hashcash Management
-// 
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-function car_encode(car_def) {
-    car_update_validator(car_def);
-    while (!car_validate(car_def)) {
-        car_update_validator(car_def);
-    }
-    return car_def;
-}
-function car_update_validator(car_def) {
-    car_def.validator = ''+(Math.random() * new Date());
-}
-function car_validate(car_def) {
-    return car_hash(car_def).slice( 0, 3 ) === "000";
-}
-function car_hash(car_def) {
-    return SHA1(JSON.stringify(car_def));
-}
 
 
 (function(){
