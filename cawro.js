@@ -32,10 +32,12 @@ function car_encode( car_def, zeroes ) {
     return car_def;
 }
 function car_update_validator(car_def) {
-    car_def.validator = ''+(Math.random() * new Date());
+    car_def.t = +(new Date());
+    car_def.validator = ''+(Math.random() * car_def.t);
 }
 function car_validate( car_def, zeroes ) {
-    return car_hash(car_def).slice( 0, 3 ) === (zeroes||"000");
+    return Math.abs(car_def.t - new Date()) < 30000 &&
+        car_hash(car_def).slice( 0, 3 ) === (zeroes||"000");
 }
 function car_hash(car_def) {
     return SHA1(JSON.stringify(car_def));
