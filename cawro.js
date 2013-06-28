@@ -344,24 +344,24 @@ cw_Car.prototype.__constructor = function(car_def) {
   this.is_elite = car_def.is_elite;
   this.healthBar = document.getElementById("health"+car_def.index).style;
   this.healthBarText = document.getElementById("health"+car_def.index).nextSibling.nextSibling;
-  this.healthBarText.innerHTML = car_def.index;
+  this.healthBarText.innerHTML = clean(car_def.index);
   this.minimapmarker = document.getElementById("bar"+car_def.index).style;
 
   if (this.is_elite) {
     this.healthBar.backgroundColor = "#44c";
     document.getElementById("bar"+car_def.index).style.borderLeft = "1px solid #44c";
-    document.getElementById("bar"+car_def.index).innerHTML = car_def.index;
+    document.getElementById("bar"+car_def.index).innerHTML = clean(car_def.index);
   } else {
     this.healthBar.backgroundColor = "#c44";
     document.getElementById("bar"+car_def.index).style.borderLeft = "1px solid #c44";
-    document.getElementById("bar"+car_def.index).innerHTML = car_def.index;
+    document.getElementById("bar"+car_def.index).innerHTML = clean(car_def.index);
   }
 
   // Healthbar BG Color
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        car_def.uuid + (car_def.remoted?" - Remote":" - Your") +
+        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - Remote":" - Your") +
         (car_def.is_elite ? " Champion" : " Car");
   }
 
