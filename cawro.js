@@ -256,7 +256,7 @@ var cw_graphTop        = [];
 var cw_graphElite      = [];
 var cw_graphAverage    = [];
 
-var gen_champions      = 2;
+var gen_champions      = 4;
 var gen_parentality    = 0.2;
 var gen_mutation       = 0.1;
 var gen_counter        = 0;
@@ -674,6 +674,7 @@ function cw_nextGeneration() {
 
   var newGeneration = [];
   var newborn;
+  var sent = false;
   cw_getChampions();
   cw_topScores.push({i:gen_counter,v:cw_carScores[0].v,x:cw_carScores[0].x,y:cw_carScores[0].y,y2:cw_carScores[0].y2});
   plot_graphs();
@@ -682,9 +683,10 @@ function cw_nextGeneration() {
     cw_carScores[k].car_def.index = k;
 
     // Only transmit #1 Top
-    if (!k) {
+    if (!sent && !cw_carScores[k].car_def.remoted) {
         car_encode(cw_carScores[k]);
         send( "champion", cw_carScores[k] );
+        sent = true;
     }
     newGeneration.push(cw_cleanCar(cw_carScores[k].car_def));
   }
@@ -718,11 +720,23 @@ function cw_nextGeneration() {
     "<strong>Cars Alive: <strong>"+generationSize;
 }
 
+function unique(arr) {
+   var u = {}, a = [];
+   for (var i = 0, l = arr.length; i < l; ++i) {
+      if (u.hasOwnProperty(arr[i].v)) continue;
+      a.push(arr[i]);
+      u[arr[i].v] = 1;
+   }
+   return a;
+}
+
 function cw_getChampions() {
   var ret = [];
+  PUBNUB.each( cw_carScores, function(a) { if (a.v > 300) a.v = 300 } );
   cw_carScores.sort(function(a,b) {if(a.v > b.v) {return -1} else {return 1}});
+  cw_carScores = unique(cw_carScores);
   for(var k = 0; k < generationSize; k++) {
-    ret.push(cw_carScores[k].i);
+    ret.push(cw_carScores[k]);
   }
   return ret;
 }
