@@ -1135,18 +1135,18 @@ function plot_graphs() {
 
 function cw_eliteaverage(scores) {
   var sum = 0;
-  for(var k = 0; k < Math.floor(generationSize/2); k++) {
+  for(var k = 0; k < Math.floor(scores.length/2); k++) {
     sum += scores[k].v;
   }
-  return sum/Math.floor(generationSize/2);
+  return sum/Math.floor(scores.length/2);
 }
 
 function cw_average(scores) {
   var sum = 0;
-  for(var k = 0; k < generationSize; k++) {
+  for(var k = 0; k < scores.length; k++) {
     sum += scores[k].v;
   }
-  return sum/generationSize;
+  return sum/scores.length;
 }
 
 function cw_clearGraphics() {
