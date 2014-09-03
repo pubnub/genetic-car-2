@@ -134,6 +134,21 @@ function car_hash(car_def) {
 
 (function(){
 
+/*
+to prevent the track from being exactly the same every single time we should change the 'newseed'
+HOWEVER if everybody gets a random 'newseed' then nobody is running the same track unless the know
+to go out of their way to submit a static world name. but even then how would they know which world to join
+that has other people running in it?
+
+my solution: generate a newseed based on the day of the month. that gives you 31 unique tracks.
+makes it so people join the same room but also see something different tomorrow. adds some variety
+but also some predictability so people are running the same track.
+
+what good is competition if there is no confidence that you are running the same race?
+            _dL
+ */
+document.getElementById("newseed").value="PubNub-World-"+(new Date()).getDate();
+
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* PUBNUB Multiplayer Physics Simulation
 /* ----------------------------------------------------------------------------
@@ -1389,7 +1404,7 @@ function cw_init() {
   }
   mmm.parentNode.removeChild(mmm);
   hbar.parentNode.removeChild(hbar);
-  floorseed = Math.seedrandom();
+  floorseed = document.getElementById("newseed").value;
   world = new b2World(gravity, doSleep);
   cw_createFloor();
   cw_drawMiniMap();
