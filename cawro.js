@@ -70,7 +70,8 @@ function car_hash(car_def) {
         var message = {
             name : clean(cname.value),
             text : clean(input.value),
-            time : ''
+            time : '',
+            world: document.getElementById("newseed").value
         };
 
         car_encode( message, "000" );
@@ -94,15 +95,17 @@ function car_hash(car_def) {
         message.text = clean(message.text);
         message.time = date_out();//clean(message.time);
         message.name = clean(message.name);
+        message.world = clean(message.world);
 
         // Don't Show Blank Messages
         if (!message.text.replace( /\s/g, '' )) return;
 
         // Ouptut to Screen
         output.innerHTML = pubnub.supplant(
-            "<strong class=chat-time>{time}</strong> "+
-            "<strong class=chat-name>( {name} )</strong> | &nbsp;"+
-            "''{text}''<br>", message
+            "<small class=chat-time>{time}</small>"+
+            "<strong class=chat-name>@{name}</strong>"+
+            "<small>{world}</small> | &nbsp;"+
+            "{text}<br>", message
         ) + output.innerHTML.slice( 0, 4000 );
     }
 
