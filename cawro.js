@@ -673,6 +673,12 @@ function cw_rotateFloorTile(coords, center, angle) {
 
 function cw_generationZero() {
     // YOUR CAR
+
+    // for generation ZERO we want to ensure some randomness
+    // so we will set the seed to some actual randomness
+    // and set it back
+
+    Math.seedrandom();
     var car_def = cw_createRandomCar(0);
     car_def.index = 0;
     cw_carGeneration.push(car_def);
@@ -683,6 +689,10 @@ function cw_generationZero() {
         car_def.index = k;
         cw_carGeneration.push(car_def);
     }
+
+    // set randomness back to the World Seed
+    floorseed = document.getElementById("newseed").value;
+    Math.seedrandom(floorseed);
 
     gen_counter      = 0;
     cw_deadCars      = 0;
