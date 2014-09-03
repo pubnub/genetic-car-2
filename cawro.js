@@ -379,7 +379,7 @@ cw_Car.prototype.__constructor = function(car_def) {
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - Remote":" - Your") +
+        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - @"+clean(car_def.user||'Remote'):" - Your") +
         (car_def.is_elite ? " Champion" : " Car");
   }
 
@@ -553,6 +553,8 @@ function cw_cleanCar(car_def) {
 function cw_createRandomCar(i) {
     var car_def = {};
 
+    car_def.user = document.getElementById('chat-name').value;
+
     car_def.wheel_radius1  = sharernd()*wheelMaxRadius+wheelMinRadius;
     car_def.wheel_radius2  = sharernd()*wheelMaxRadius+wheelMinRadius;
     car_def.wheel_density1 = sharernd()*wheelMaxDensity+wheelMinDensity;
@@ -694,7 +696,7 @@ function cw_nextGeneration() {
   var newborn;
   var sent = false;
   cw_getChampions();
-  cw_topScores.push({i:gen_counter,v:cw_carScores[0].v,x:cw_carScores[0].x,y:cw_carScores[0].y,y2:cw_carScores[0].y2});
+  cw_topScores.push({i:gen_counter,v:cw_carScores[0].v,x:cw_carScores[0].x,y:cw_carScores[0].y,y2:cw_carScores[0].y2,user:cw_carScores[0].car_def.user});
   plot_graphs();
   for(var k = 0; k < gen_champions; k++) {
     cw_carScores[k].car_def.is_elite = true;
@@ -702,6 +704,7 @@ function cw_nextGeneration() {
 
     // Only transmit #1 Top
     if (!sent && !cw_carScores[k].car_def.remoted) {
+        cw_carScores[k].car_def.user = document.getElementById('chat-name').value;
         car_encode(cw_carScores[k]);
         send( "champion", cw_carScores[k] );
         sent = true;
@@ -1188,7 +1191,7 @@ function cw_listTopScores() {
   ts.innerHTML = "Top Scores:<br />";
   cw_topScores.sort(function(a,b) {if(a.v > b.v) {return -1} else {return 1}});
   for(var k = 0; k < Math.min(10,cw_topScores.length); k++) {
-    document.getElementById("topscores").innerHTML += "#"+(k+1)+": "+Math.round(cw_topScores[k].v*100)/100+" d:"+Math.round(cw_topScores[k].x*100)/100+" h:"+Math.round(cw_topScores[k].y2*100)/100+"/"+Math.round(cw_topScores[k].y*100)/100+"m (gen "+clean(cw_topScores[k].i)+")<br />";
+    document.getElementById("topscores").innerHTML += "#"+(k+1)+": "+Math.round(cw_topScores[k].v*100)/100+" d:"+Math.round(cw_topScores[k].x*100)/100+" h:"+Math.round(cw_topScores[k].y2*100)/100+"/"+Math.round(cw_topScores[k].y*100)/100+"m (gen "+clean(cw_topScores[k].i)+") @"+clean(cw_topScores[k].user||'Remote')+"<br />";
   }
 }
 
