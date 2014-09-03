@@ -70,7 +70,8 @@ function car_hash(car_def) {
         var message = {
             name : clean(cname.value),
             text : clean(input.value),
-            time : ''
+            time : '',
+            world: document.getElementById("newseed").value
         };
 
         car_encode( message, "000" );
@@ -84,7 +85,6 @@ function car_hash(car_def) {
 
     // Append Chat Message
     function chat(message) {
-        if (!car_validate( message, "000" )) return;
 
         // Default Name
         if (!('name' in message)) message.name = "Robert";
@@ -94,15 +94,17 @@ function car_hash(car_def) {
         message.text = clean(message.text);
         message.time = date_out();//clean(message.time);
         message.name = clean(message.name);
+        message.world = clean(message.world);
 
         // Don't Show Blank Messages
         if (!message.text.replace( /\s/g, '' )) return;
 
         // Ouptut to Screen
         output.innerHTML = pubnub.supplant(
-            "<strong class=chat-time>{time}</strong> "+
-            "<strong class=chat-name>( {name} )</strong> | &nbsp;"+
-            "''{text}''<br>", message
+            "<small class=chat-time>{time}</small>"+
+            "<strong class=chat-name>@{name}</strong>"+
+            "<small>{world}</small> | &nbsp;"+
+            "{text}<br>", message
         ) + output.innerHTML.slice( 0, 4000 );
     }
 
@@ -112,10 +114,28 @@ function car_hash(car_def) {
             channel  : channel,
             limit    : 10,
             callback : function(msgs) {
-                if (msgs.length > 1)
-                    pubnub.each( msgs[0], chat );
+                if (msgs.length > 1) {
+                    pubnub.each(msgs[0], chat);
+                }
+                countChatters();
             }
-        })
+        });
+
+        var countChatters= function(){
+            pubnub.here_now({
+                channel: channel,
+                callback: function(m){welcomeMessage(m.occupancy)}
+            });
+        };
+
+        var welcomeMessage = function(occupancy){
+            chat({
+                name:'WelcomeBot',
+                text: 'Welcome to chat! Messages are shared across Worlds. Feel free to give yourself a menacing name. '+occupancy+' users currently connected.',
+                world:'local'
+            });
+        };
+
     }
 
     // Receive Chat Message
@@ -133,6 +153,21 @@ function car_hash(car_def) {
 
 
 (function(){
+
+/*
+to prevent the track from being exactly the same every single time we should change the 'newseed'
+HOWEVER if everybody gets a random 'newseed' then nobody is running the same track unless the know
+to go out of their way to submit a static world name. but even then how would they know which world to join
+that has other people running in it?
+
+my solution: generate a newseed based on the day of the month. that gives you 31 unique tracks.
+makes it so people join the same room but also see something different tomorrow. adds some variety
+but also some predictability so people are running the same track.
+
+what good is competition if there is no confidence that you are running the same race?
+            _dL
+ */
+document.getElementById("newseed").value="PubNub-World-"+(new Date()).getDate();
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 /* PUBNUB Multiplayer Physics Simulation
@@ -361,7 +396,7 @@ cw_Car.prototype.__constructor = function(car_def) {
   if (car_def.uuid) {
       this.healthBar.backgroundColor = "#"+car_def.uuid;
       document.getElementById("health"+car_def.index).innerHTML =
-        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - Remote":" - Your") +
+        clean(car_def.uuid).slice(0,6) + (car_def.remoted?" - @"+clean(car_def.user||'Remote'):" - Your") +
         (car_def.is_elite ? " Champion" : " Car");
   }
 
@@ -535,6 +570,8 @@ function cw_cleanCar(car_def) {
 function cw_createRandomCar(i) {
     var car_def = {};
 
+    car_def.user = document.getElementById('chat-name').value;
+
     car_def.wheel_radius1  = sharernd()*wheelMaxRadius+wheelMinRadius;
     car_def.wheel_radius2  = sharernd()*wheelMaxRadius+wheelMinRadius;
     car_def.wheel_density1 = sharernd()*wheelMaxDensity+wheelMinDensity;
@@ -636,6 +673,12 @@ function cw_rotateFloorTile(coords, center, angle) {
 
 function cw_generationZero() {
     // YOUR CAR
+
+    // for generation ZERO we want to ensure some randomness
+    // so we will set the seed to some actual randomness
+    // and set it back
+
+    Math.seedrandom();
     var car_def = cw_createRandomCar(0);
     car_def.index = 0;
     cw_carGeneration.push(car_def);
@@ -646,6 +689,10 @@ function cw_generationZero() {
         car_def.index = k;
         cw_carGeneration.push(car_def);
     }
+
+    // set randomness back to the World Seed
+    floorseed = document.getElementById("newseed").value;
+    Math.seedrandom(floorseed);
 
     gen_counter      = 0;
     cw_deadCars      = 0;
@@ -676,7 +723,7 @@ function cw_nextGeneration() {
   var newborn;
   var sent = false;
   cw_getChampions();
-  cw_topScores.push({i:gen_counter,v:cw_carScores[0].v,x:cw_carScores[0].x,y:cw_carScores[0].y,y2:cw_carScores[0].y2});
+  cw_topScores.push({i:gen_counter,v:cw_carScores[0].v,x:cw_carScores[0].x,y:cw_carScores[0].y,y2:cw_carScores[0].y2,user:cw_carScores[0].car_def.user});
   plot_graphs();
   for(var k = 0; k < gen_champions; k++) {
     cw_carScores[k].car_def.is_elite = true;
@@ -684,6 +731,7 @@ function cw_nextGeneration() {
 
     // Only transmit #1 Top
     if (!sent && !cw_carScores[k].car_def.remoted) {
+        cw_carScores[k].car_def.user = document.getElementById('chat-name').value;
         car_encode(cw_carScores[k]);
         send( "champion", cw_carScores[k] );
         sent = true;
@@ -1170,7 +1218,7 @@ function cw_listTopScores() {
   ts.innerHTML = "Top Scores:<br />";
   cw_topScores.sort(function(a,b) {if(a.v > b.v) {return -1} else {return 1}});
   for(var k = 0; k < Math.min(10,cw_topScores.length); k++) {
-    document.getElementById("topscores").innerHTML += "#"+(k+1)+": "+Math.round(cw_topScores[k].v*100)/100+" d:"+Math.round(cw_topScores[k].x*100)/100+" h:"+Math.round(cw_topScores[k].y2*100)/100+"/"+Math.round(cw_topScores[k].y*100)/100+"m (gen "+clean(cw_topScores[k].i)+")<br />";
+    document.getElementById("topscores").innerHTML += "#"+(k+1)+": "+Math.round(cw_topScores[k].v*100)/100+" d:"+Math.round(cw_topScores[k].x*100)/100+" h:"+Math.round(cw_topScores[k].y2*100)/100+"/"+Math.round(cw_topScores[k].y*100)/100+"m (gen "+clean(cw_topScores[k].i)+") @"+clean(cw_topScores[k].user||'Remote')+"<br />";
   }
 }
 
@@ -1389,7 +1437,7 @@ function cw_init() {
   }
   mmm.parentNode.removeChild(mmm);
   hbar.parentNode.removeChild(hbar);
-  floorseed = Math.seedrandom();
+  floorseed = document.getElementById("newseed").value;
   world = new b2World(gravity, doSleep);
   cw_createFloor();
   cw_drawMiniMap();
