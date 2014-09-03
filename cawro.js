@@ -85,7 +85,6 @@ function car_hash(car_def) {
 
     // Append Chat Message
     function chat(message) {
-        if (!car_validate( message, "000" )) return;
 
         // Default Name
         if (!('name' in message)) message.name = "Robert";
@@ -115,10 +114,28 @@ function car_hash(car_def) {
             channel  : channel,
             limit    : 10,
             callback : function(msgs) {
-                if (msgs.length > 1)
-                    pubnub.each( msgs[0], chat );
+                if (msgs.length > 1) {
+                    pubnub.each(msgs[0], chat);
+                }
+                countChatters();
             }
-        })
+        });
+
+        var countChatters= function(){
+            pubnub.here_now({
+                channel: channel,
+                callback: function(m){welcomeMessage(m.occupancy)}
+            });
+        };
+
+        var welcomeMessage = function(occupancy){
+            chat({
+                name:'WelcomeBot',
+                text: 'Welcome to chat! Messages are shared across Worlds. Feel free to give yourself a menacing name. '+occupancy+' users currently connected.',
+                world:'local'
+            });
+        };
+
     }
 
     // Receive Chat Message
